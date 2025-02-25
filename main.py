@@ -24,7 +24,7 @@ def login():
         if username:
             print(f'Login successful! Welcome, {username}')
         else:
-            print('Face not recognized')
+            print('Face not recognized\n')
 
 def exit_prog():
     print('Exiting the program...')
