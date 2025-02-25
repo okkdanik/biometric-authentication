@@ -1,11 +1,10 @@
 import cv2
 import face_recognition
 import pickle
-import database.db as db
+import database.redis_cli as redis
 
 def face_handling(frame):
     rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
     face_encodings = face_recognition.face_encodings(rgb_frame)
 
     if len(face_encodings) == 0:
@@ -20,7 +19,7 @@ def face_compare(frame):
     face_encodings = face_recognition.face_encodings(rgb_frame)
     if not face_encodings:
         return None
-    known_users = db.get_info()
+    known_users = redis.get_info()
 
     for username, encodings in known_users:
         known_encoding = pickle.loads(encodings)

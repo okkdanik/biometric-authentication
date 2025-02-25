@@ -13,7 +13,7 @@ def video_capture():
 
         cv2.imshow('REC...', frame)
 
-        key = cv2.waitKey(25) & 0xFF
+        key = cv2.waitKey(1) & 0xFF
 
         if key == ord('s'):
             cap.release()
@@ -26,4 +26,3 @@ def video_capture():
     cv2.destroyAllWindows()
 
     return None
-

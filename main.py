@@ -1,11 +1,11 @@
 import detect.camera as cam
 import detect.face_recogn as recogn
-import database.db as db
+import database.redis_cli as redis
 
 def register():
     while True:
         username = input('Enter your name: ')
-        check = db.check_username(username)
+        check = redis.check_username(username)
         if check is True:
             break
         print('That name is already taken. Try something else\n')
@@ -15,7 +15,7 @@ def register():
     if frame is not None:
         encoding = recogn.face_handling(frame)
         if encoding is not None:
-            db.add_user(username, encoding)
+            redis.add_user(username, encoding)
 
 def login():
     frame = cam.video_capture()
@@ -41,8 +41,6 @@ def menu():
 
 
 def main():
-    db.create_db()
-
     funcs_menu = {'1': register, '2': login, '3': exit_prog}
 
     menu()
