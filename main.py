@@ -2,6 +2,7 @@ import detect.camera as cam
 import detect.face_recogn as recogn
 import database.redis_cli as redis
 
+
 def register():
     while True:
         username = input('Enter your name: ')
@@ -17,14 +18,16 @@ def register():
         if encoding is not None:
             redis.add_user(username, encoding)
 
+
 def login():
     frame = cam.video_capture()
     if frame is not None:
-        username = recogn.face_compare(frame)
+        username, confidence, elapsed_time = recogn.face_compare(frame)
         if username:
-            print(f'Login successful! Welcome, {username}')
+            print(f"Login successful! Welcome, {username} | Face recognized in {elapsed_time:.3f} seconds | Confidence: {confidence:.2f}")
         else:
-            print('Face not recognized\n')
+            print(f'Face not recognized | Processing time: {elapsed_time:.3f} seconds')
+
 
 def exit_prog():
     print('Exiting the program...')
@@ -49,6 +52,7 @@ def main():
         choice = input('Enter the mode number: ')
 
         funcs_menu.get(choice, incorrect_input)()
+
 
 if __name__ == '__main__':
     main()
