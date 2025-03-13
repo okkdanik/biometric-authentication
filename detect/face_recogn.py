@@ -2,10 +2,33 @@ import cv2
 import face_recognition
 import pickle
 import time
+import numpy as np
 import database.redis_cli as redis
 
 
+def detect_moire_pattern(image):
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    dft = cv2.dft(np.float32(gray), flags=cv2.DFT_COMPLEX_OUTPUT)
+    dft_shift = np.fft.fftshift(dft)
+    magnitude_spectrum = 20 * np.log(cv2.magnitude(dft_shift[:, :, 0], dft_shift[:, :, 1]) + 1)
+    mean_freq_intensity = np.mean(magnitude_spectrum)
+    return mean_freq_intensity > 150
+
+
+def detect_blur(image):
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    laplacian_var = cv2.Laplacian(gray, cv2.CV_64F).var()
+    return laplacian_var < 50
+
+
 def face_handling(frame):
+    if detect_moire_pattern(frame):
+        print('Detected moiré pattern. Possible screen photo.')
+        return None
+    if detect_blur(frame):
+        print('Image too blurry. Possible screen photo.')
+        return None
+
     rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     face_encodings = face_recognition.face_encodings(rgb_frame)
 
@@ -18,6 +41,13 @@ def face_handling(frame):
 
 def face_compare(frame):
     start_time = time.time()
+
+    if detect_moire_pattern(frame):
+        print('Detected moiré pattern. Possible screen photo.')
+        return None, None, time.time() - start_time
+    if detect_blur(frame):
+        print('Image too blurry. Possible screen photo.')
+        return None, None, time.time() - start_time
 
     rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     face_encodings = face_recognition.face_encodings(rgb_frame)
@@ -32,7 +62,6 @@ def face_compare(frame):
     for username, encodings in known_users:
         known_encoding = pickle.loads(encodings)
         distance = face_recognition.face_distance([known_encoding], face_encodings[0])[0]
-
         confidence = max(0.0, 1 - ((distance - 0.3) / (0.6 - 0.3)))
 
         if confidence > best_confidence:
