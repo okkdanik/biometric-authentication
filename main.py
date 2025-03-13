@@ -25,8 +25,10 @@ def login():
         username, confidence, elapsed_time = recogn.face_compare(frame)
         if username:
             print(f"Login successful! Welcome, {username} | Face recognized in {elapsed_time:.3f} seconds | Confidence: {confidence:.2f}")
+            exit()
         else:
             print(f'Face not recognized | Processing time: {elapsed_time:.3f} seconds')
+            exit_prog()
 
 
 def exit_prog():

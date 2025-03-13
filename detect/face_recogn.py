@@ -23,7 +23,7 @@ def face_compare(frame):
     face_encodings = face_recognition.face_encodings(rgb_frame)
 
     if not face_encodings:
-        return None, None, None
+        return None, None, time.time() - start_time
 
     known_users = redis.get_info()
     best_match = None
