@@ -4,10 +4,11 @@ import time
 import requests
 import numpy as np
 import imutils
+from config.local import camera_url
 
 
 def video_capture():
-    url = 'http://x.x.x.x:8080/shot.jpg'
+    url = camera_url
     start_time = None
     print("Please don't move\n")
 

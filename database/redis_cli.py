@@ -1,7 +1,8 @@
 import redis
+from config.local import redis_conf
 
 def redis_conn():
-    return redis.Redis(host='localhost', port=6379, db=0)
+    return redis.Redis(**redis_conf)
 
 def check_username(username):
     r = redis_conn()
