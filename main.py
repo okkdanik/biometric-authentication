@@ -24,7 +24,8 @@ def login():
     if frame is not None:
         username, confidence, elapsed_time = recogn.face_compare(frame)
         if username:
-            print(f"Login successful! Welcome, {username} | Face recognized in {elapsed_time:.3f} seconds | Confidence: {confidence:.2f}")
+            confidence_percent = min(100.0, confidence * 100)
+            print(f"Login successful! Welcome, {username} | Face recognized in {elapsed_time:.3f} seconds | Confidence: {confidence_percent:.1f}%")
             exit()
         else:
             print(f'Face not recognized | Processing time: {elapsed_time:.3f} seconds')

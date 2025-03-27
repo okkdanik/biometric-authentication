@@ -62,7 +62,8 @@ def face_compare(frame):
     for username, encodings in known_users:
         known_encoding = pickle.loads(encodings)
         distance = face_recognition.face_distance([known_encoding], face_encodings[0])[0]
-        confidence = max(0.0, 1 - ((distance - 0.3) / (0.6 - 0.3)))
+        confidence = (0.6 - distance) / (0.6 - 0.3)
+        confidence = max(0.0, min(1.0, confidence))
 
         if confidence > best_confidence:
             best_match = username
