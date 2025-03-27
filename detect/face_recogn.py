@@ -41,19 +41,24 @@ def face_handling(frame):
 
 def face_compare(frame):
     start_time = time.time()
+    error_reason = None
 
     if detect_moire_pattern(frame):
-        print('Detected moiré pattern. Possible screen photo.')
-        return None, None, time.time() - start_time
+        error_reason = 'Possible screen photo detected'
+        elapsed_time = time.time() - start_time
+        return None, None, elapsed_time, error_reason
     if detect_blur(frame):
-        print('Image too blurry. Possible screen photo.')
-        return None, None, time.time() - start_time
+        error_reason = 'Image too blurry'
+        elapsed_time = time.time() - start_time
+        return None, None, elapsed_time, error_reason
 
     rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     face_encodings = face_recognition.face_encodings(rgb_frame)
 
     if not face_encodings:
-        return None, None, time.time() - start_time
+        error_reason = 'No face detected'
+        elapsed_time = time.time() - start_time
+        return None, None, elapsed_time, error_reason
 
     known_users = redis.get_info()
     best_match = None
@@ -72,5 +77,7 @@ def face_compare(frame):
     elapsed_time = time.time() - start_time
 
     if best_match:
-        return best_match, best_confidence, elapsed_time
-    return None, None, elapsed_time
+        return best_match, best_confidence, elapsed_time, None
+    else:
+        error_reason = 'Face not recognized'
+        return None, None, elapsed_time, error_reason

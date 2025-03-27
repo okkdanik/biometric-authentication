@@ -1,6 +1,7 @@
 import detect.camera as cam
 import detect.face_recogn as recogn
 import database.redis_cli as redis
+from ui.output import print_main_menu, print_login_success, print_access_denied
 
 
 def register():
@@ -22,13 +23,12 @@ def register():
 def login():
     frame = cam.video_capture()
     if frame is not None:
-        username, confidence, elapsed_time = recogn.face_compare(frame)
+        username, confidence, elapsed_time, error_reason = recogn.face_compare(frame)
         if username:
-            confidence_percent = min(100.0, confidence * 100)
-            print(f"Login successful! Welcome, {username} | Face recognized in {elapsed_time:.3f} seconds | Confidence: {confidence_percent:.1f}%")
+            print_login_success(username, confidence, elapsed_time)
             exit()
         else:
-            print(f'Face not recognized | Processing time: {elapsed_time:.3f} seconds')
+            print_access_denied(elapsed_time, error_reason)
             exit_prog()
 
 
@@ -42,13 +42,11 @@ def incorrect_input():
 
 
 def menu():
-    welcome_list = ['=' * 25, 'Select the mode:', '1 - Registration', '2 - Log in', '3 - Exit', '=' * 25]
-    print(*welcome_list, sep='\n')
+    print_main_menu()
 
 
 def main():
     funcs_menu = {'1': register, '2': login, '3': exit_prog}
-
     menu()
 
     while True:
