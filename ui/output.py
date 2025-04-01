@@ -29,7 +29,7 @@ def print_main_menu():
               f"{color}{item.ljust(max_content_length)}{colors['end']} "
               f"{color}|{colors['end']}")
 
-    print(f"{color}{'=' * border_length}{colors['end']}\n")
+    print(f"{color}q{'=' * border_length}{colors['end']}\n")
 
 def print_login_success(username: str, confidence: float, elapsed_time: float):
     header = ' LOGIN SUCCESSFUL '

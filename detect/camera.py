@@ -1,10 +1,19 @@
 import cv2
+import dlib
 import face_recognition
 import time
 import requests
 import numpy as np
 import imutils
 from config.local import camera_url
+
+
+detector = dlib.get_frontal_face_detector()
+
+def detect_faces_fast(frame):
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    faces = detector(gray, 1)
+    return faces
 
 
 def video_capture():
@@ -28,8 +37,10 @@ def video_capture():
 
         cv2.imshow('Face Recognition - Press Q to exit', frame)
 
-        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        face_locations = face_recognition.face_locations(rgb_frame)
+        # rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        # face_locations = face_recognition.face_locations(rgb_frame)
+
+        face_locations = detect_faces_fast(frame)
 
         if face_locations:
             if start_time is None:
