@@ -1,3 +1,6 @@
+import datetime
+
+
 colors = {
     'green': '\033[92m',
     'red': '\033[91m',
@@ -34,9 +37,12 @@ def print_main_menu():
 def print_login_success(username: str, confidence: float, elapsed_time: float):
     header = ' LOGIN SUCCESSFUL '
     welcome_msg = f' Welcome, {username}! '
+    current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
     stats = [
         f' Recognition time: {elapsed_time:.3f} seconds',
-        f' Confidence level: {min(100.0, confidence * 100):.1f}%'
+        f' Confidence level: {min(100.0, confidence * 100):.1f}%',
+        f' Login time: {current_time}'
     ]
 
     max_length = max(len(header), len(welcome_msg), *[len(s) for s in stats])
