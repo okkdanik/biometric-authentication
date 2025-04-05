@@ -2,6 +2,7 @@ import detect.camera as cam
 import detect.face_recogn as recogn
 import database.redis_cli as redis
 from ui.output import print_main_menu, print_login_success, print_access_denied
+from logs.log_writer import log_successful_login
 
 
 def register():
@@ -26,6 +27,7 @@ def login():
         username, confidence, elapsed_time, error_reason = recogn.face_compare(frame)
         if username:
             print_login_success(username, confidence, elapsed_time)
+            log_successful_login(username, elapsed_time, confidence)
             exit()
         else:
             print_access_denied(elapsed_time, error_reason)

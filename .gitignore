@@ -6,3 +6,4 @@ __pycache__/
 users.db
 config/local.py
 *.local.py
+logs/users_data/*.json
