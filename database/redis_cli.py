@@ -11,7 +11,7 @@ def check_username(username):
 def add_user(username, encoding):
     r = redis_conn()
     r.set(username, encoding)
-    print(f'User [{username}] has been successfully registered\n')
+    print(f'\033[92mUser [{username}] has been successfully registered\n\033[0m')
 
 def get_info():
     r = redis_conn()

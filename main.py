@@ -11,7 +11,7 @@ def register():
         check = redis.check_username(username)
         if check is True:
             break
-        print('That name is already taken. Try something else\n')
+        print('\033[91mThat name is already taken. Try something else\n\033[0m')
 
     frame = cam.video_capture()
 
@@ -40,7 +40,7 @@ def exit_prog():
 
 
 def incorrect_input():
-    print('Incorrect input. Try it (1 - 3)')
+    print('\033[91mIncorrect input. Try it (1 - 3)\033[0m')
 
 
 def menu():
